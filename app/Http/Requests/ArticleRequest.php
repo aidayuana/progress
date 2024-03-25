@@ -26,7 +26,7 @@ class ArticleRequest extends FormRequest
             'title' => 'required',
             'description' => 'required',
             'approval' => [Rule::requiredIf(function() {
-                return request()->routeIs('article.store');
+                return request()->routeIs('article.storeApprove');
             })]
         ];
     }

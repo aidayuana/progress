@@ -12,6 +12,8 @@ use App\Notifications\ArticleNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Gate;
+
 
 class ArticleController extends Controller
 {
@@ -77,8 +79,13 @@ class ArticleController extends Controller
 
     public function approve(Article $article)
     {
+        // Check if the authenticated user has the "teacher" role
+        if (!Gate::allows('isTeacher')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $article->load('tags');
-        $action = null;
+        $action = route('article.storeApprove', $article->id);
 
         if ($article->published_at) {
             $action =  null;
@@ -92,7 +99,12 @@ class ArticleController extends Controller
 
     public function storeApprove(ArticleRequest $request, Article $article)
     {
-        if ($request->approve == 1) {
+        // Check if the authenticated user has the "teacher" role
+        if (!Gate::allows('isTeacher')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        if ($request->approval == 1) {
             $article->published_at = now();
         }
 

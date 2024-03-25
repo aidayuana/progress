@@ -25,8 +25,9 @@ return new class extends Migration
     {
         Schema::table('articles', function (Blueprint $table) {
             $table->dropColumn('status_approve');
-            $table->dropConstrainedForeignId('user_approve_id');
             $table->dropColumn('keterangan_approve');
+            $table->dropConstrainedForeignId('user_approve_id');
+            
         });
     }
 };
